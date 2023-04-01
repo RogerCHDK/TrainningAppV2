@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="1" author="rogelio">
+        <createTable tableName="weight_control">
+            <column name="WEIGHT_CONTROL_ID_SEQ" type="bigint" autoIncrement="true">
+                <constraints nullable="false" unique="true" primaryKey="true" primaryKeyName="WEIGHT_CONTROL_ID_SEQ"/>
+            </column>
+            <column name="WEIGHT" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DATE_WEIGHT" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="USER_ID" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="weight_control" baseColumnNames="USER_ID" constraintName="RULE_USER_ID_WEIGHT_CONTROL_FK" referencedTableName="user" referencedColumnNames="USER_ID_SEQ" />
+    </changeSet>
+
+    <changeSet id="2" author="rogelio">
+        <createTable tableName="routine_exercise">
+            <column name="ROUTINE_EXERCISE_ID_SEQ" type="bigint" autoIncrement="true">
+                <constraints nullable="false" unique="true" primaryKey="true" primaryKeyName="ROUTINE_EXERCISE_ID_SEQ"/>
+            </column>
+            <column name="DATE_ROUTINE" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="OBSERVATIONS" type="text"/>
+            <column name="TIME_BREAK" type="time"/>
+            <column name="STATUS" type="int"/>
+            <column name="USER_ID" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="routine_exercise" baseColumnNames="USER_ID" constraintName="USER_ID_routine_exercise_FK" referencedTableName="user" referencedColumnNames="USER_ID_SEQ" />
+    </changeSet>
+
+    <changeSet id="3" author="rogelio">
+        <createTable tableName="training_exercise">
+            <column name="TRAINING_EXERCISE_ID_SEQ" type="bigint" autoIncrement="true">
+                <constraints nullable="false" unique="true" primaryKey="true" primaryKeyName="TRAINING_EXERCISE_ID_SEQ"/>
+            </column>
+            <column name="NAME" type="text"/>
+            <column name="BODY_PART" type="text"/>
+            <column name="DESCRIPTION" type="text"/>
+            <column name="IMAGE_EXERCISE" type="text"/>
+            <column name="VIDEO_EXERCISE" type="text"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="4" author="rogelio">
+        <createTable tableName="training_set">
+            <column name="TRAINING_SET_ID_SEQ" type="bigint" autoIncrement="true">
+                <constraints nullable="false" unique="true" primaryKey="true" primaryKeyName="TRAINING_SET_ID_SEQ"/>
+            </column>
+            <column name="NUMBER_REPS" type="int"/>
+            <column name="TIME_AVERAGE" type="time"/>
+            <column name="ROUTINE_EXERCISE_ID" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TRAINING_EXERCISE_ID" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="training_set" baseColumnNames="ROUTINE_EXERCISE_ID" constraintName="routine_exercise_set_FK" referencedTableName="routine_exercise" referencedColumnNames="ROUTINE_EXERCISE_ID_SEQ" />
+        <addForeignKeyConstraint baseTableName="training_set" baseColumnNames="TRAINING_EXERCISE_ID" constraintName="trainig_exercise_set_FK" referencedTableName="training_exercise" referencedColumnNames="TRAINING_EXERCISE_ID_SEQ" />
+    </changeSet>
+
+    <changeSet id="5" author="rogelio">
+        <createTable tableName="cardio_machine">
+            <column name="CARDIO_MACHINE_ID_SEQ" type="bigint" autoIncrement="true">
+                <constraints nullable="false" unique="true" primaryKey="true" primaryKeyName="CARDIO_MACHINE_ID_SEQ"/>
+            </column>
+            <column name="NAME" type="varchar(25)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="IMAGE_WORKOUT" type="varchar(250)"/>
+            <column name="DESCRIPTION" type="varchar(250)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="6" author="rogelio">
+        <createTable tableName="cardio_set">
+            <column name="CARDIO_SET_ID_SEQ" type="bigint" autoIncrement="true">
+                <constraints nullable="false" unique="true" primaryKey="true" primaryKeyName="CARDIO_SET_ID_SEQ"/>
+            </column>
+            <column name="routine_exercise_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cardio_machine_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="cardio_set" baseColumnNames="ROUTINE_EXERCISE_ID" constraintName="routine_id_cardio_FK" referencedTableName="routine_exercise" referencedColumnNames="ROUTINE_EXERCISE_ID_SEQ" />
+        <addForeignKeyConstraint baseTableName="cardio_set" baseColumnNames="cardio_machine_id" constraintName="cardio_machine_set_FK" referencedTableName="cardio_machine" referencedColumnNames="CARDIO_MACHINE_ID_SEQ" />
+    </changeSet>
+
+    <changeSet id="7" author="rogelio">
+        <createTable tableName="cardio_workout">
+            <column name="CARDIO_WORKOUT_ID_SEQ" type="bigint" autoIncrement="true">
+                <constraints nullable="false" unique="true" primaryKey="true" primaryKeyName="CARDIO_WORKOUT_ID_SEQ"/>
+            </column>
+            <column name="CALORIES" type="numeric">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DISTANCE" type="numeric">
+                <constraints nullable="false"/>
+            </column>
+            <column name="VELOCITY_AVERAGE" type="numeric">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cardio_set_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="cardio_workout" baseColumnNames="cardio_set_id" constraintName="cardio_set_id_FK" referencedTableName="cardio_set" referencedColumnNames="CARDIO_SET_ID_SEQ" />
+    </changeSet>
+
+</databaseChangeLog>
