@@ -5,10 +5,8 @@ import com.rogerfitness.workoutsystem.dto.UserResponseDto;
 import com.rogerfitness.workoutsystem.exceptions.NonRetryableDBException;
 import com.rogerfitness.workoutsystem.exceptions.RetryableDBException;
 import com.rogerfitness.workoutsystem.jpa.entities.UserEntity;
-import com.rogerfitness.workoutsystem.jpa.repositories.UserRepository;
 import com.rogerfitness.workoutsystem.jpa.wrapper.UserRetryableWrapper;
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
