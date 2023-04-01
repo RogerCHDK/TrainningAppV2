@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UserRetryableWrapper userRetryableWrapper;
     private final UserConverter userConverter;
-//    TODO: add handling expception, create swagger page, create Grafana dashboard, create siren alert
+//    TODO: add handling expception, create swagger page, create Grafana dashboard, create siren alert, test
     public List<UserResponseDto> getAllUsers() throws NonRetryableDBException, RetryableDBException {
         List<UserEntity> userEntityList = userRetryableWrapper.getAllUsers();
         return userEntityList.stream().map(userConverter::convertFromEntity).collect(Collectors.toList());
