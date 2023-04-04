@@ -1,5 +1,3 @@
-FROM openjdk:17-jdk-slim-buster
-EXPOSE 8080
-WORKDIR /home/app
-COPY build/libs/workoutsystem.jar app.jar
-ENTRYPOINT ["java","-jar","app.jar"]
+FROM eclipse-temurin:17
+COPY target/*.jar app.jar
+ENTRYPOINT ["java","-jar","/app.jar"]
