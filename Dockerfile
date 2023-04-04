@@ -1,4 +1,5 @@
 FROM openjdk:17-jdk-slim-buster
 EXPOSE 8080
-ADD target/workoutsystem.jar workoutsystem.jar
-ENTRYPOINT ["java","-jar","/workoutsystem.jar"]
+WORKDIR /home/app
+COPY build/libs/workoutsystem.jar app.jar
+ENTRYPOINT ["java","-jar","app.jar"]
