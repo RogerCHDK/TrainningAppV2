@@ -7,6 +7,9 @@ import com.rogerfitness.workoutsystem.jpa.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
@@ -42,5 +45,25 @@ public class UserRetryableWrapper {
             throw new NonRetryableDBException(message, exception);
         }
         return userEntityList;
+    }
+
+    @Retryable(
+            include = RetryableDBException.class,
+            exclude = {NonRetryableDBException.class},
+            maxAttemptsExpression = "3",
+            backoff = @Backoff(delay = 1000)
+    )
+    public Page<UserEntity> fetchUsers(Specification<UserEntity> specification,Pageable pageable) throws RetryableDBException, NonRetryableDBException{
+        try {
+            return userRepository.findAll(specification, pageable);
+        }catch (DataAccessException | CannotCreateTransactionException retryableException){
+            String message = "A Retryable exception occurred while getting all users";
+            log.error(message,retryableException);
+            throw new RetryableDBException(message, retryableException);
+        }catch (Exception exception){
+            String message = "A Non Retryable DB exception occurred while getting all users";
+            log.error(message,exception);
+            throw new NonRetryableDBException(message, exception);
+        }
     }
 }

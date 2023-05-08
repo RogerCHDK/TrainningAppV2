@@ -7,7 +7,7 @@ plugins {
 group = 'com.rogerfitness'
 def appVersion = new File("./version.txt").getText()
 version = appVersion ?: '0.0.1'
-sourceCompatibility = '11'
+sourceCompatibility = '17'
 
 configurations {
 	compileOnly {
@@ -25,6 +25,9 @@ dependencies {
 	implementation 'org.liquibase:liquibase-core'
 	implementation 'org.springframework.retry:spring-retry'
 	implementation 'org.springframework:spring-aspects'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator:3.0.4'
+	implementation 'io.micrometer:micrometer-registry-prometheus:1.10.5'
+	implementation 'org.apache.commons:commons-lang3:3.4'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
