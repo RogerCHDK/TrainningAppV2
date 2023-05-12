@@ -31,7 +31,8 @@ public class UserService {
     public Page<UserResponseDto> fetchUsers(UserSearchCriteria searchCriteria) throws NonRetryableDBException, RetryableDBException {
         Specification<UserEntity> specification = UserSpecification.filterByName(searchCriteria.getName())
                 .and(UserSpecification.filterByUserId(searchCriteria.getUserIdSeq()))
-                .and(UserSpecification.filterByEmail(searchCriteria.getEmail()));
+                .and(UserSpecification.filterByEmail(searchCriteria.getEmail()))
+                .and(UserSpecification.filterByWeight(searchCriteria.getWeight()));
         Pageable pageable = searchCriteria.createPageable();
         Page<UserEntity> userEntityPage;
         userEntityPage = userRetryableWrapper.fetchUsers(specification, pageable);

@@ -1,11 +1,14 @@
 package com.rogerfitness.workoutsystem.jpa.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+
+import java.util.List;
 
 import static javax.persistence.GenerationType.SEQUENCE;
 
@@ -39,4 +42,7 @@ public class UserEntity {
     private String email;
     @Column(name = "password")
     private String password;
+    @JsonManagedReference
+    @OneToMany(mappedBy = "user",  fetch = FetchType.LAZY)
+    private List<WeightControlEntity> weightControlEntity;
 }

@@ -14,6 +14,7 @@ public class UserSearchCriteria extends SearchCriteria{
     private Integer userIdSeq;
     private String name;
     private String email;
+    private Double weight;
     @Override
     Sort.Direction defaultSortDirection() {
         return Sort.Direction.DESC;

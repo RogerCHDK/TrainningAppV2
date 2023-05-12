@@ -25,9 +25,19 @@ dependencies {
 	implementation 'org.liquibase:liquibase-core'
 	implementation 'org.springframework.retry:spring-retry'
 	implementation 'org.springframework:spring-aspects'
+
+//	Prometheus y Grafana metrics
 	implementation 'org.springframework.boot:spring-boot-starter-actuator:3.0.4'
 	implementation 'io.micrometer:micrometer-registry-prometheus:1.10.5'
+
+//	Utility class
 	implementation 'org.apache.commons:commons-lang3:3.4'
+
+//	Swagger
+//	implementation 'io.springfox:springfox-swagger2:2.9.2'
+//	implementation 'io.springfox:springfox-swagger-ui:2.9.2'
+	implementation 'io.springfox:springfox-boot-starter:3.0.0'
+
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'

@@ -34,6 +34,7 @@ public class UserController {
             @RequestParam(required = false) Integer userIdSeq,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String email,
+            @RequestParam(required = false) Double weight,
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "50") Integer size,
             @RequestParam(required = false) String sortBy,
@@ -44,6 +45,7 @@ public class UserController {
                 .userIdSeq(userIdSeq)
                 .name(name)
                 .email(email)
+                .weight(weight)
                 .page(page)
                 .size(size)
                 .sortBy(sortBy)
