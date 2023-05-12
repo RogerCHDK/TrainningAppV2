@@ -1,8 +1,10 @@
 package com.rogerfitness.workoutsystem.controllers;
 
+import com.rogerfitness.workoutsystem.constants.PrometheusConstants;
 import com.rogerfitness.workoutsystem.dto.UserResponseDto;
 import com.rogerfitness.workoutsystem.jpa.searchcriteria.UserSearchCriteria;
 import com.rogerfitness.workoutsystem.service.UserService;
+import com.rogerfitness.workoutsystem.utilities.metrics.RequestCounter;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +21,12 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final RequestCounter requestCounter;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, RequestCounter requestCounter) {
         this.userService = userService;
+        this.requestCounter = requestCounter;
     }
 
     @GetMapping
@@ -51,6 +55,7 @@ public class UserController {
             @RequestParam(required = false, defaultValue = "DESC") @ApiParam(allowableValues = "ASC, DESC") String sortOrder
     ) throws Exception {
         log.info("GET endpoint fetchUsers --START");
+        requestCounter.incrementCount(PrometheusConstants.FETCH_USERS_VOLUME);
         UserSearchCriteria userSearchCriteria = UserSearchCriteria.builder()
                 .userIdSeq(userIdSeq)
                 .name(name)

@@ -1,5 +1,6 @@
 package com.rogerfitness.workoutsystem.service;
 
+import com.rogerfitness.workoutsystem.constants.PrometheusConstants;
 import com.rogerfitness.workoutsystem.converter.UserConverter;
 import com.rogerfitness.workoutsystem.dto.UserResponseDto;
 import com.rogerfitness.workoutsystem.exceptions.NonRetryableDBException;
@@ -8,6 +9,7 @@ import com.rogerfitness.workoutsystem.jpa.entities.UserEntity;
 import com.rogerfitness.workoutsystem.jpa.searchcriteria.UserSearchCriteria;
 import com.rogerfitness.workoutsystem.jpa.specifications.UserSpecification;
 import com.rogerfitness.workoutsystem.jpa.wrapper.UserRetryableWrapper;
+import io.micrometer.core.annotation.Timed;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +30,7 @@ public class UserService {
         return userEntityList.stream().map(userConverter::convertFromEntity).collect(Collectors.toList());
     }
 
+    @Timed(PrometheusConstants.USER_SERVICE_FETCH_USERS_LATENCY)
     public Page<UserResponseDto> fetchUsers(UserSearchCriteria searchCriteria) throws NonRetryableDBException, RetryableDBException {
         Specification<UserEntity> specification = UserSpecification.filterByName(searchCriteria.getName())
                 .and(UserSpecification.filterByUserId(searchCriteria.getUserIdSeq()))
