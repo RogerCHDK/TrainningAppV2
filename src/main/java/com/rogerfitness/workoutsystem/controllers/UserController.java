@@ -3,17 +3,18 @@ package com.rogerfitness.workoutsystem.controllers;
 import com.rogerfitness.workoutsystem.constants.PrometheusConstants;
 import com.rogerfitness.workoutsystem.dto.UserResponseDto;
 import com.rogerfitness.workoutsystem.jpa.searchcriteria.UserSearchCriteria;
+import com.rogerfitness.workoutsystem.responses.ApiPageableResponse;
 import com.rogerfitness.workoutsystem.service.UserService;
 import com.rogerfitness.workoutsystem.utilities.metrics.RequestCounter;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 @Api
 @Slf4j
 @RestController
@@ -30,7 +31,7 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserResponseDto>> getAllUsers()throws Exception{
+    public ResponseEntity<List<UserResponseDto>> getAllUsers() throws Exception {
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
@@ -44,16 +45,17 @@ public class UserController {
                     @ApiResponse(code = 404, message = "Not Found", response = String.class),
                     @ApiResponse(code = 500, message = "Internal Server Error", response = String.class)
             })
-    public ResponseEntity<Page<UserResponseDto>> fetchUsers(
+    public ResponseEntity<ApiPageableResponse<UserResponseDto>> fetchUsers(
             @RequestParam(required = false) @ApiParam("User's id") Integer userIdSeq,
             @RequestParam(required = false) @ApiParam("User name") String name,
-            @RequestParam(required = false) @ApiParam("User email")String email,
+            @RequestParam(required = false) @ApiParam("User email") String email,
             @RequestParam(required = false) Double weight,
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "50") Integer size,
             @RequestParam(required = false) String sortBy,
             @RequestParam(required = false, defaultValue = "DESC") @ApiParam(allowableValues = "ASC, DESC") String sortOrder
     ) throws Exception {
+//        Todo: Create ApiError and handle errors properly
         log.info("GET endpoint fetchUsers --START");
         requestCounter.incrementCount(PrometheusConstants.FETCH_USERS_VOLUME);
         UserSearchCriteria userSearchCriteria = UserSearchCriteria.builder()
@@ -66,7 +68,6 @@ public class UserController {
                 .sortBy(sortBy)
                 .sortOrder(sortOrder)
                 .build();
-
-        return new ResponseEntity<>(userService.fetchUsers(userSearchCriteria), HttpStatus.OK);
+        return ResponseEntity.ok(new ApiPageableResponse<>(userService.fetchUsers(userSearchCriteria)));
     }
 }
