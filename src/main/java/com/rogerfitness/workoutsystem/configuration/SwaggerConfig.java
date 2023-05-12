@@ -1,5 +1,6 @@
 package com.rogerfitness.workoutsystem.configuration;
 
+import io.swagger.annotations.Api;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
@@ -30,9 +31,10 @@ public class SwaggerConfig {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.any())
-                .build();
+                .apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
+                .paths(PathSelectors.ant("/**"))
+                .build()
+                .apiInfo(getApiInfo());
     }
     private ApiInfo getApiInfo() {
         return new ApiInfo(
@@ -50,7 +52,6 @@ public class SwaggerConfig {
     @Bean
     public static BeanPostProcessor springfoxHandlerProviderBeanPostProcessor() {
         return new BeanPostProcessor() {
-
             @Override
             public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
                 if (bean instanceof WebMvcRequestHandlerProvider || bean instanceof WebFluxRequestHandlerProvider) {
@@ -58,15 +59,11 @@ public class SwaggerConfig {
                 }
                 return bean;
             }
-
             private <T extends RequestMappingInfoHandlerMapping> void customizeSpringfoxHandlerMappings(List<T> mappings) {
-                List<T> copy = mappings.stream()
-                        .filter(mapping -> mapping.getPatternParser() == null)
-                        .collect(Collectors.toList());
+                List<T> copy = mappings.stream().filter(mapping -> mapping.getPatternParser() == null).collect(Collectors.toList());
                 mappings.clear();
                 mappings.addAll(copy);
             }
-
             @SuppressWarnings("unchecked")
             private List<RequestMappingInfoHandlerMapping> getHandlerMappings(Object bean) {
                 try {
