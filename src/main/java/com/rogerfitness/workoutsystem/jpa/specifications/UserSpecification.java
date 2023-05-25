@@ -1,16 +1,12 @@
 package com.rogerfitness.workoutsystem.jpa.specifications;
 
 import com.rogerfitness.workoutsystem.jpa.entities.UserEntity;
-import com.rogerfitness.workoutsystem.jpa.entities.WeightControlEntity;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Root;
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.*;
 
 @Slf4j
 @UtilityClass
@@ -32,31 +28,34 @@ public class UserSpecification {
     }
 
     public static Specification<UserEntity> filterByUserId(Integer userIdSeq) {
-      return (Root<UserEntity> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
-          if (null == userIdSeq){
-              return criteriaBuilder.conjunction();
-          }
-          log.info("Filtering by userIdSeq: {}", userIdSeq);
-          return criteriaBuilder.equal(root.get(USER_ID_SEQ),userIdSeq);
-      };
+        return (Root<UserEntity> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
+            if (null == userIdSeq) {
+                return criteriaBuilder.conjunction();
+            }
+            log.info("Filtering by userIdSeq: {}", userIdSeq);
+            return criteriaBuilder.equal(root.get(USER_ID_SEQ), userIdSeq);
+        };
     }
+
     public static Specification<UserEntity> filterByEmail(String email) {
         return (Root<UserEntity> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
-            if (StringUtils.isBlank(email)){
+            if (StringUtils.isBlank(email)) {
                 return criteriaBuilder.conjunction();
             }
             log.info("Filtering by email: {}", email);
             return criteriaBuilder.equal(criteriaBuilder.lower(root.get(EMAIL)), email.toLowerCase());
         };
     }
-    public static Specification<UserEntity> filterByWeight(Double weight) {
+
+    public static Specification<UserEntity> filterByWeight(Double weight, EntityManager entityManager) {
         return (Root<UserEntity> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
-            if (null == weight){
+            if (null == weight) {
                 return criteriaBuilder.conjunction();
             }
             log.info("Filtering by weight: {}", weight);
-            Join<UserEntity, WeightControlEntity> weightJoin = root.join(WEIGHT_CONTROL);
-            return criteriaBuilder.equal(weightJoin.get(WEIGHT),weight);
+            Fetch<Object, Object> fetch = root.fetch(WEIGHT_CONTROL, JoinType.INNER);
+            query.distinct(true);
+            return criteriaBuilder.greaterThan(root.join(WEIGHT_CONTROL).get("weight"), weight);
         };
     }
 }

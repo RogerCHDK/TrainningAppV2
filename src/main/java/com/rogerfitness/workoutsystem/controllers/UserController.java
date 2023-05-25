@@ -3,6 +3,7 @@ package com.rogerfitness.workoutsystem.controllers;
 import com.rogerfitness.workoutsystem.constants.PrometheusConstants;
 import com.rogerfitness.workoutsystem.dto.UserResponseDto;
 import com.rogerfitness.workoutsystem.jpa.searchcriteria.UserSearchCriteria;
+import com.rogerfitness.workoutsystem.responses.ApiErrorResponse;
 import com.rogerfitness.workoutsystem.responses.ApiPageableResponse;
 import com.rogerfitness.workoutsystem.service.UserService;
 import com.rogerfitness.workoutsystem.utilities.metrics.RequestCounter;
@@ -43,7 +44,7 @@ public class UserController {
                     @ApiResponse(code = 400, message = "Bad Request", response = String.class),
                     @ApiResponse(code = 401, message = "UnAuthorized", response = String.class),
                     @ApiResponse(code = 404, message = "Not Found", response = String.class),
-                    @ApiResponse(code = 500, message = "Internal Server Error", response = String.class)
+                    @ApiResponse(code = 500, message = "Internal Server Error", response = ApiErrorResponse.class)
             })
     public ResponseEntity<ApiPageableResponse<UserResponseDto>> fetchUsers(
             @RequestParam(required = false) @ApiParam("User's id") Integer userIdSeq,
@@ -68,6 +69,12 @@ public class UserController {
                 .sortBy(sortBy)
                 .sortOrder(sortOrder)
                 .build();
-        return ResponseEntity.ok(new ApiPageableResponse<>(userService.fetchUsers(userSearchCriteria)));
+        try {
+            return ResponseEntity.ok(new ApiPageableResponse<>(userService.fetchUsers(userSearchCriteria)));
+        } catch (Exception e) {
+            requestCounter.incrementCount(PrometheusConstants.FETCH_USERS_ERROR);
+            log.error("[UserController] fetchUsers() exception occurs", e);
+            throw e;
+        }
     }
 }

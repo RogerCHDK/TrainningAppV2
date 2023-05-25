@@ -35,7 +35,7 @@ public class WeightControlEntity {
     private Integer weightControlIdSeq;
 
     @Column(name = "weight")
-    private Integer weight;
+    private Double weight;
 
     @Column(name = "date_weight")
     private Date date_weight;

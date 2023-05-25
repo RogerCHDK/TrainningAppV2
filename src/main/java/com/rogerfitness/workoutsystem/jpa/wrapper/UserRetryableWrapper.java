@@ -1,5 +1,6 @@
 package com.rogerfitness.workoutsystem.jpa.wrapper;
 
+import com.rogerfitness.workoutsystem.constants.ErrorConstants;
 import com.rogerfitness.workoutsystem.exceptions.NonRetryableDBException;
 import com.rogerfitness.workoutsystem.exceptions.RetryableDBException;
 import com.rogerfitness.workoutsystem.jpa.entities.UserEntity;
@@ -57,13 +58,13 @@ public class UserRetryableWrapper {
         try {
             return userRepository.findAll(specification, pageable);
         }catch (DataAccessException | CannotCreateTransactionException retryableException){
-            String message = "A Retryable exception occurred while getting all users";
+            String message = "A Retryable exception occurred while fetching users";
             log.error(message,retryableException);
-            throw new RetryableDBException(message, retryableException);
+            throw new RetryableDBException(message, retryableException, ErrorConstants.RETRYABLE_DB_ERROR_CODE);
         }catch (Exception exception){
-            String message = "A Non Retryable DB exception occurred while getting all users";
+            String message = "A Non Retryable DB exception occurred while fetching users";
             log.error(message,exception);
-            throw new NonRetryableDBException(message, exception);
+            throw new NonRetryableDBException(message, exception, ErrorConstants.NON_RETRYABLE_DB_ERROR_CODE);
         }
     }
 }
