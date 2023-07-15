@@ -18,12 +18,12 @@ public class DevController {
         this.sirenAlertPublisher = sirenAlertPublisher;
     }
 
-//    @GetMapping("/publish/{message}")
-//    public String publishMessage(@PathVariable("message") final String message) {
-//
-//        // Sending the message
-//        sirenAlertPublisher.sendMessage(message);
-//
-//        return "Published Successfully";
-//    }
+    @GetMapping("/publish/{message}")
+    public String publishMessage(@PathVariable("message") final String message) {
+
+        // Sending the message
+        sirenAlertPublisher.sendMessage(message);
+
+        return "Published Successfully";
+    }
 }

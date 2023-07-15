@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 public class SirenAlertSubscription {
     @KafkaListener(topics = "workout-test", groupId = "com.rogerfitness.workoutsystem")
     public void listenGroupFoo(String message) {
+//Todo: Receive and save the message into a table
         log.info("Received Message: {}", message);
     }
 }

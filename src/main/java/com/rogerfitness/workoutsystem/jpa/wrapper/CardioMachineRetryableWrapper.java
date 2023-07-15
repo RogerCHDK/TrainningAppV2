@@ -1,5 +1,6 @@
 package com.rogerfitness.workoutsystem.jpa.wrapper;
 
+import com.rogerfitness.workoutsystem.constants.ErrorConstants;
 import com.rogerfitness.workoutsystem.exceptions.NonRetryableDBException;
 import com.rogerfitness.workoutsystem.exceptions.RetryableDBException;
 import com.rogerfitness.workoutsystem.jpa.entities.CardioMachineEntity;
@@ -38,10 +39,10 @@ public class CardioMachineRetryableWrapper {
             return cardioMachineRepository.findCardioMachineEntitiesByIsExpired(isExpired, pageable);
         }catch (DataAccessException | CannotCreateTransactionException | TransactionSystemException retryableDBException){
             log.error("Retryable DB exception occurred in fetchCardioMachineByIsExpired", retryableDBException);
-            throw new RetryableDBException(retryableDBException.getMessage(), retryableDBException);
+            throw new RetryableDBException(retryableDBException.getMessage(), retryableDBException, ErrorConstants.RETRYABLE_DB_ERROR_CODE);
         }catch (Exception nonRetryableDBException){
             log.error("Non-Retryable DB exception occurred in fetchCardioMachineByIsExpired", nonRetryableDBException);
-            throw new NonRetryableDBException(nonRetryableDBException.getMessage(), nonRetryableDBException);
+            throw new NonRetryableDBException(nonRetryableDBException.getMessage(), nonRetryableDBException, ErrorConstants.NON_RETRYABLE_DB_ERROR_CODE);
         }
     }
 

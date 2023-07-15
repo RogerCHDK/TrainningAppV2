@@ -1,5 +1,6 @@
 package com.rogerfitness.workoutsystem.schedulers;
 
+import com.rogerfitness.workoutsystem.exceptions.CardioMachinePurgeException;
 import com.rogerfitness.workoutsystem.service.CardioMachineService;
 import com.rogerfitness.workoutsystem.utilities.ApplicationConfigurationProvider;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +19,7 @@ public class CardioMachinePurgeScheduler {
     }
 
     @Scheduled(fixedDelayString = "${cardio.machine.purge.scheduler.fixedDelay.interval.in.milliseconds}")
-    public void doRunCardioMachinePurgeScheduler(){
+    public void doRunCardioMachinePurgeScheduler() throws CardioMachinePurgeException {
         if (configurationProvider.isEnablePurgingCardioMachineSchedulerFeature()){
             cardioMachineService.processCardioMachinePurge();
         }else {
