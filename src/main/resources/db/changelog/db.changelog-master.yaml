@@ -5,3 +5,5 @@ databaseChangeLog:
       file: db/changelog/create-schemas.xml
   - include:
       file: db/changelog/db.changelog-localh2data.xml
+  - include:
+      file: db/changelog/db.changelog-1.0.xml

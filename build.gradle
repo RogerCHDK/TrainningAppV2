@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.7.5'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	id 'org.liquibase.gradle' version '2.0.4'
 }
 
 group = 'com.rogerfitness'
@@ -26,7 +27,7 @@ dependencies {
 	implementation 'org.springframework.retry:spring-retry'
 	implementation 'org.springframework:spring-aspects'
 
-//	Prometheus y Grafana metrics
+//	Prometheus and Grafana metrics
 	implementation 'org.springframework.boot:spring-boot-starter-actuator:3.0.4'
 	implementation 'io.micrometer:micrometer-registry-prometheus:1.10.5'
 
@@ -44,7 +45,16 @@ dependencies {
 //	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	runtimeOnly 'com.h2database:h2'
+
+//	Liquibase cli commands
+	liquibaseRuntime 'org.liquibase:liquibase-core:4.8.0'
+	liquibaseRuntime 'org.postgresql:postgresql'
+	liquibaseRuntime files("src/main/resources")
+
+//	kafka
+	implementation 'org.springframework.kafka:spring-kafka:2.9.0'
 }
+apply plugin: "org.liquibase.gradle"
 
 task getArtifactVersion {
 	doLast {
@@ -54,5 +64,17 @@ task getArtifactVersion {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+
+liquibase {
+	activities {
+		main {
+			changeLogFile "db/changelog/db.changelog-master.xml"
+			url project.hasProperty('url') ? project.property('url') : ''
+			username project.hasProperty('username') ? project.property('username') : ''
+			password  project.hasProperty('password') ? project.property('password') : ''
+		}
+	}
 }
 

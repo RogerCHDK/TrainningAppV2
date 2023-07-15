@@ -56,7 +56,6 @@ public class UserController {
             @RequestParam(required = false) String sortBy,
             @RequestParam(required = false, defaultValue = "DESC") @ApiParam(allowableValues = "ASC, DESC") String sortOrder
     ) throws Exception {
-//        Todo: Create ApiError and handle errors properly
         log.info("GET endpoint fetchUsers --START");
         requestCounter.incrementCount(PrometheusConstants.FETCH_USERS_VOLUME);
         UserSearchCriteria userSearchCriteria = UserSearchCriteria.builder()

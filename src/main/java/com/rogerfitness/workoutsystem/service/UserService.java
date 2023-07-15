@@ -29,7 +29,7 @@ public class UserService {
     private final UserRetryableWrapper userRetryableWrapper;
     private final UserConverter userConverter;
     private final EntityManager entityManager;
-//    TODO: add handle exception, create swagger page, create Grafana dashboard, create siren alert, test
+
     public List<UserResponseDto> getAllUsers() throws NonRetryableDBException, RetryableDBException {
         List<UserEntity> userEntityList = userRetryableWrapper.getAllUsers();
         return userEntityList.stream().map(userConverter::convertFromEntity).collect(Collectors.toList());
@@ -49,9 +49,12 @@ public class UserService {
             log.warn("Invalid search property given: {} defaulting", searchCriteria.getSortBy(), referenceException);
             searchCriteria.useDefaultSort();
             userEntityPage = userRetryableWrapper.fetchUsers(specification, searchCriteria.createPageable());
-        }catch (RetryableDBException | NonRetryableDBException dbException){
-            log.error("[UserService] fetchUsers() DB exception occurs", dbException);
-            throw new FetchUsersDatabaseException(dbException);
+        }catch (RetryableDBException retryableDBException){
+            log.error("[UserService] fetchUsers() retryable DB exception occurs", retryableDBException);
+            throw new FetchUsersDatabaseException(retryableDBException.getMessage(), retryableDBException, retryableDBException.getErrorCode());
+        }catch (NonRetryableDBException nonRetryableDBException){
+            log.error("[UserService] fetchUsers() non-retryable DB exception occurs", nonRetryableDBException);
+            throw new FetchUsersDatabaseException(nonRetryableDBException.getMessage(), nonRetryableDBException, nonRetryableDBException.getErrorCode());
         }
         catch (Exception exception) {
             log.error("[UserService] fetchUsers() general exception occurs", exception);

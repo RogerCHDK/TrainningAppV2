@@ -7,4 +7,5 @@ public class ErrorConstants {
     public static final String INTERNAL_SERVER_ERROR ="WORKSYSTEM001";
     public static final String RETRYABLE_DB_ERROR_CODE ="WORKSYSTEM002";
     public static final String NON_RETRYABLE_DB_ERROR_CODE ="WORKSYSTEM003";
+    public static final String DATABASE_ERROR_CODE ="WORKSYSTEM004";
 }
