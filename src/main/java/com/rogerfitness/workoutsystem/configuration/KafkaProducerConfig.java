@@ -1,6 +1,5 @@
 package com.rogerfitness.workoutsystem.configuration;
 
-import com.rogerfitness.workoutsystem.dto.SirenAlertMessage;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;

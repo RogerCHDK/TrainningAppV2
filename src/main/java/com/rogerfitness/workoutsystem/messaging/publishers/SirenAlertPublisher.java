@@ -36,7 +36,7 @@ public class SirenAlertPublisher {
 //    }
     public void sendMessage(SirenAlertMessage message) {
         ListenableFuture<SendResult<String, SirenAlertMessage>> response = kafkaTemplate.send(topicName, message);
-        response.addCallback(new ListenableFutureCallback<SendResult<String, SirenAlertMessage>>() {
+        response.addCallback(new ListenableFutureCallback<>() {
             @Override
             public void onFailure(Throwable ex) {
                 log.warn("Unable to deliver message [{}]. {}", message, ex.getMessage(), ex);
