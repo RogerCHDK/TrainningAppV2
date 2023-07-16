@@ -8,8 +8,7 @@ import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
-
-import java.util.Objects;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -23,7 +22,7 @@ public class SirenAlertPublisher {
     }
 
         public void sendMessage(Object message) {
-        ListenableFuture<SendResult<String, Object>> response = kafkaTemplate.send(topicName, message);
+        ListenableFuture<SendResult<String, Object>> response = kafkaTemplate.send(topicName, UUID.randomUUID().toString(), message);
         response.addCallback(new ListenableFutureCallback<>() {
             @Override
             public void onFailure(Throwable ex) {

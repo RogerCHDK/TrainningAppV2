@@ -15,4 +15,8 @@ public class ApplicationConfigurationProvider {
     public boolean enablePurgingCardioMachineSchedulerFeature;
     @Value("${cardio.machine.purge.batch.size}")
     public Integer cardioMachinePurgeBatchSize;
+    @Value("${scheduler.run.timeZone}")
+    public String schedulerTimeZone;
+    @Value("${scheduler.pool.max.size}")
+    public Integer schedulerPoolMaxSize;
 }
