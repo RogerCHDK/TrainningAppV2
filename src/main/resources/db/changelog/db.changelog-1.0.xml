@@ -11,4 +11,44 @@
             <column name="is_expired" type="boolean" defaultValueBoolean="false"/>
         </addColumn>
     </changeSet>
+    <changeSet id="2" author="rogelio">
+        <addColumn tableName="training_exercise">
+            <column name="effective_start_dttm" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </addColumn>
+        <addColumn tableName="training_exercise">
+            <column name="effective_end_dttm" type="timestamp"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="3" author="rogelio">
+        <addColumn tableName="cardio_set">
+            <column name="effective_start_dttm" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </addColumn>
+        <addColumn tableName="cardio_set">
+            <column name="effective_end_dttm" type="timestamp"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="4" author="rogelio">
+        <addColumn tableName="cardio_workout">
+            <column name="effective_start_dttm" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </addColumn>
+        <addColumn tableName="cardio_workout">
+            <column name="effective_end_dttm" type="timestamp"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="5" author="rogelio">
+        <addColumn tableName="routine_exercise">
+            <column name="effective_start_dttm" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </addColumn>
+        <addColumn tableName="routine_exercise">
+            <column name="effective_end_dttm" type="timestamp"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="6" author="rogelio">
+        <addColumn tableName="training_set">
+            <column name="effective_start_dttm" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </addColumn>
+        <addColumn tableName="training_set">
+            <column name="effective_end_dttm" type="timestamp"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

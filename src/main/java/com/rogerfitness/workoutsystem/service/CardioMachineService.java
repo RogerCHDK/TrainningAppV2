@@ -56,7 +56,7 @@ public class CardioMachineService {
             log.error(String.format(AlertConstants.RETRYABLE_DATABASE_FAILURE_REASON, CardioMachineService.class.getSimpleName(), retryableDBException.getMessage()), retryableDBException);
             throw new CardioMachinePurgeException(retryableDBException.getMessage(), retryableDBException, ErrorConstants.RETRYABLE_DB_ERROR_CODE);
         }catch (NonRetryableDBException nonRetryableDBException){
-            log.error(String.format(AlertConstants.RETRYABLE_DATABASE_FAILURE_REASON, CardioMachineService.class.getSimpleName(), nonRetryableDBException.getMessage()), nonRetryableDBException);
+            log.error(String.format(AlertConstants.NON_RETRYABLE_DATABASE_FAILURE_REASON, CardioMachineService.class.getSimpleName(), nonRetryableDBException.getMessage()), nonRetryableDBException);
             throw new CardioMachinePurgeException(nonRetryableDBException.getMessage(), nonRetryableDBException, ErrorConstants.NON_RETRYABLE_DB_ERROR_CODE);
         }catch (Exception exception){
             log.error(String.format("[%s] General exception while purging cardioMachine records", CardioMachineService.class.getSimpleName()), exception);

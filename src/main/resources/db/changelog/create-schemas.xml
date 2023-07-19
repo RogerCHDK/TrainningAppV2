@@ -70,7 +70,7 @@
             </column>
         </createTable>
         <addForeignKeyConstraint baseTableName="training_set" baseColumnNames="ROUTINE_EXERCISE_ID" constraintName="routine_exercise_set_FK" referencedTableName="routine_exercise" referencedColumnNames="ROUTINE_EXERCISE_ID_SEQ" />
-        <addForeignKeyConstraint baseTableName="training_set" baseColumnNames="TRAINING_EXERCISE_ID" constraintName="trainig_exercise_set_FK" referencedTableName="training_exercise" referencedColumnNames="TRAINING_EXERCISE_ID_SEQ" />
+        <addForeignKeyConstraint baseTableName="training_set" baseColumnNames="TRAINING_EXERCISE_ID" constraintName="training_exercise_set_FK" referencedTableName="training_exercise" referencedColumnNames="TRAINING_EXERCISE_ID_SEQ" />
     </changeSet>
 
     <changeSet id="5" author="rogelio">
