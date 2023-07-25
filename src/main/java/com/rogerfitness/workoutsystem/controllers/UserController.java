@@ -1,8 +1,9 @@
 package com.rogerfitness.workoutsystem.controllers;
 
 import com.rogerfitness.workoutsystem.constants.PrometheusConstants;
+import com.rogerfitness.workoutsystem.dto.AuthenticationRequest;
 import com.rogerfitness.workoutsystem.dto.AuthenticationResponse;
-import com.rogerfitness.workoutsystem.dto.RegisterRequest;
+import com.rogerfitness.workoutsystem.dto.CreateUserRequest;
 import com.rogerfitness.workoutsystem.dto.UserResponseDto;
 import com.rogerfitness.workoutsystem.jpa.searchcriteria.UserSearchCriteria;
 import com.rogerfitness.workoutsystem.responses.ApiErrorResponse;
@@ -82,19 +83,37 @@ public class UserController {
 
     @PostMapping("/sing-in")
     public ResponseEntity<com.rogerfitness.workoutsystem.responses.ApiResponse<AuthenticationResponse>> createUser(
-            @Valid @RequestBody RegisterRequest registerRequest
+            @Valid @RequestBody CreateUserRequest createUserRequest
     ) throws Exception {
         log.info("POST endpoint createUser --START");
         try {
             return new ResponseEntity<>(
                     new com.rogerfitness.workoutsystem.responses.ApiResponse<>(
                             HttpStatus.CREATED.value(),
-                            userService.createUser(registerRequest)
+                            userService.createUser(createUserRequest)
                     ),
                     HttpStatus.CREATED
             );
         } catch (Exception e) {
             log.error("[UserController] createUser() exception occurs", e);
+            throw e;
+        }
+    }
+    @PostMapping("/login")
+    public ResponseEntity<com.rogerfitness.workoutsystem.responses.ApiResponse<AuthenticationResponse>> authenticateUser(
+            @Valid @RequestBody AuthenticationRequest request
+    ) throws Exception {
+        log.info("POST endpoint authenticateUser --START");
+        try {
+            return new ResponseEntity<>(
+                    new com.rogerfitness.workoutsystem.responses.ApiResponse<>(
+                            HttpStatus.OK.value(),
+                            userService.authenticateUser(request)
+                    ),
+                    HttpStatus.OK
+            );
+        } catch (Exception e) {
+            log.error("[UserController] authenticateUser() exception occurs", e);
             throw e;
         }
     }

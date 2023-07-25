@@ -14,7 +14,7 @@ import javax.validation.constraints.Pattern;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterRequest {
+public class CreateUserRequest {
     @NotEmpty(message = "Name is required")
     private String name;
     @NotEmpty(message = "The email address is required.")

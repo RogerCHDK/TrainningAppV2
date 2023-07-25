@@ -1,6 +1,5 @@
 package com.rogerfitness.workoutsystem.configuration;
 
-import com.rogerfitness.workoutsystem.jpa.wrapper.UserRetryableWrapper;
 import com.rogerfitness.workoutsystem.service.JwtService;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,7 +22,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
 
-    public JwtAuthenticationFilter(JwtService jwtService, UserRetryableWrapper userRetryableWrapper, UserDetailsService userDetailsService) {
+    public JwtAuthenticationFilter(JwtService jwtService, UserDetailsService userDetailsService) {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
     }
@@ -41,7 +40,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-//        jwt = authHeader.substring(7);
         jwt = authHeader.split(" ")[1].trim();
         userEmail = jwtService.extractUsername(jwt);
 //        Check if the userName is not null, and if the user is not authenticated yet

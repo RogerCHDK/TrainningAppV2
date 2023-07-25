@@ -80,13 +80,16 @@ public class UserRetryableWrapper {
             return userRepository
                     .getUserEntityByEmail(email)
                     .orElseThrow(
-                            () -> new UsernameNotFoundException("User Not found")
+                            () -> new UsernameNotFoundException(ErrorConstants.USERNAME_NOT_FOUND_ERROR_MESSAGE)
                     );
         }catch (DataAccessException | CannotCreateTransactionException retryableException){
             String message = "A Retryable exception occurred while fetching user by email";
             log.error(message,retryableException);
             throw new RetryableDBException(message, retryableException);
-        }catch (Exception exception){
+        }catch (UsernameNotFoundException e){
+            log.error(e.getMessage(),e);
+            throw e;
+        } catch (Exception exception){
             String message = "A Non Retryable DB exception occurred while fetching user by email";
             log.error(message,exception);
             throw new NonRetryableDBException(message, exception);

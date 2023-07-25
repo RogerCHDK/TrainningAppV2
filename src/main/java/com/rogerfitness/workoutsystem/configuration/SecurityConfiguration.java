@@ -33,7 +33,8 @@ public class SecurityConfiguration {
                                 "/swagger-ui/**",
                                 "/actuator/**",
                                 "/h2-console/**",
-                                "/api/v1/user/sing-in"
+                                "/api/v1/user/sing-in",
+                                "/api/v1/user/login"
                         )
                         .permitAll()
                         .anyRequest()

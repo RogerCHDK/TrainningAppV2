@@ -7,10 +7,11 @@ import com.rogerfitness.workoutsystem.dto.SirenAlertMessage;
 import com.rogerfitness.workoutsystem.exceptions.CreateUserDatabaseException;
 import com.rogerfitness.workoutsystem.exceptions.Error;
 import com.rogerfitness.workoutsystem.exceptions.FetchUsersDatabaseException;
+import com.rogerfitness.workoutsystem.exceptions.database.NonRetryableDBException;
+import com.rogerfitness.workoutsystem.exceptions.database.RetryableDBException;
 import com.rogerfitness.workoutsystem.messaging.publishers.SirenAlertPublisher;
 import com.rogerfitness.workoutsystem.responses.ApiErrorResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -34,9 +35,8 @@ public class UserControllerExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorResponse> handleException(Exception ex) {
         log.error("Error attempting to complete service request :: {} :: {}", ex.getClass().getName(), ex.getMessage(), ex);
-        ApiErrorResponse apiErrorResponse = ApiErrorResponse.builder().error(Error.builder().description(ex.getMessage()).build()).build();
-        String description = "";
-        HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+        ApiErrorResponse apiErrorResponse = ApiErrorResponse.builder().build();
+        String description = ex.getMessage();
         if (ex instanceof FetchUsersDatabaseException) {
             String reason = String.format("%s - Database exception occurred while fetching users. %s", ((FetchUsersDatabaseException) ex).getErrorCode(), ex.getMessage());
             description = "Database exception occurred while fetching users";
@@ -47,9 +47,6 @@ public class UserControllerExceptionHandler {
                     .remediationLink(AlertConstants.REMEDIATION_LINK)
                     .appName(APP_NAME)
                     .build());
-            apiErrorResponse = apiErrorResponse.toBuilder()
-                    .error(Error.builder().code(ErrorConstants.INTERNAL_SERVER_ERROR).description(description).build())
-                    .build();
         }else if (ex instanceof CreateUserDatabaseException) {
             String reason = String.format("%s - Database exception occurred while saving user information. %s", ((CreateUserDatabaseException) ex).getErrorCode(), ex.getMessage());
             description = "Database exception occurred while saving user information";
@@ -60,9 +57,27 @@ public class UserControllerExceptionHandler {
                     .remediationLink(AlertConstants.REMEDIATION_LINK)
                     .appName(APP_NAME)
                     .build());
-            apiErrorResponse = apiErrorResponse.toBuilder()
-                    .error(Error.builder().code(ErrorConstants.INTERNAL_SERVER_ERROR).description(description).build())
-                    .build();
+        }else if (ex instanceof RetryableDBException) {
+            String reason = String.format("%s - Retryable Database exception occurred while calling UserController endpoint. %s", ((RetryableDBException) ex).getErrorCode(), ex.getMessage());
+            description = "Retryable Database exception occurred while calling UserController endpoint";
+            sirenAlertPublisher.sendMessage(SirenAlertMessage.builder()
+                    .reason(reason)
+                    .alertType(AlertConstants.ALERT_TYPE_DATA_BASE_FAILURE)
+                    .businessImpact(AlertConstants.USER_ERROR_BUSINESS_IMPACT)
+                    .remediationLink(AlertConstants.REMEDIATION_LINK)
+                    .appName(APP_NAME)
+                    .build());
+
+        }else if (ex instanceof NonRetryableDBException) {
+            String reason = String.format("%s - Non-Retryable Database exception occurred while calling UserController endpoint. %s", ((NonRetryableDBException) ex).getErrorCode(), ex.getMessage());
+            description = "Non-Retryable Database exception occurred while calling UserController endpoint";
+            sirenAlertPublisher.sendMessage(SirenAlertMessage.builder()
+                    .reason(reason)
+                    .alertType(AlertConstants.ALERT_TYPE_DATA_BASE_FAILURE)
+                    .businessImpact(AlertConstants.USER_ERROR_BUSINESS_IMPACT)
+                    .remediationLink(AlertConstants.REMEDIATION_LINK)
+                    .appName(APP_NAME)
+                    .build());
         }else if (ex instanceof MethodArgumentNotValidException){
             List<Error> errorList = ((MethodArgumentNotValidException) ex)
                     .getBindingResult()
@@ -74,8 +89,11 @@ public class UserControllerExceptionHandler {
             apiErrorResponse = apiErrorResponse.toBuilder()
                     .errors(errorList)
                     .build();
-            httpStatus = HttpStatus.BAD_REQUEST;
+            return ResponseEntity.badRequest().body(apiErrorResponse);
         }
-        return new ResponseEntity<>(apiErrorResponse, httpStatus);
+        apiErrorResponse = apiErrorResponse.toBuilder()
+                .error(Error.builder().code(ErrorConstants.INTERNAL_SERVER_ERROR).description(description).build())
+                .build();
+        return ResponseEntity.internalServerError().body(apiErrorResponse);
     }
 }

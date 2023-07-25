@@ -2,14 +2,15 @@ package com.rogerfitness.workoutsystem.service;
 
 import com.rogerfitness.workoutsystem.constants.PrometheusConstants;
 import com.rogerfitness.workoutsystem.converter.UserConverter;
+import com.rogerfitness.workoutsystem.dto.AuthenticationRequest;
 import com.rogerfitness.workoutsystem.dto.AuthenticationResponse;
-import com.rogerfitness.workoutsystem.dto.RegisterRequest;
+import com.rogerfitness.workoutsystem.dto.CreateUserRequest;
 import com.rogerfitness.workoutsystem.dto.UserResponseDto;
 import com.rogerfitness.workoutsystem.exceptions.CreateUserDatabaseException;
 import com.rogerfitness.workoutsystem.exceptions.FetchUsersDatabaseException;
 import com.rogerfitness.workoutsystem.exceptions.database.NonRetryableDBException;
 import com.rogerfitness.workoutsystem.exceptions.database.RetryableDBException;
-import com.rogerfitness.workoutsystem.jpa.entities.SecurityUser;
+import com.rogerfitness.workoutsystem.jpa.entities.UserSecurity;
 import com.rogerfitness.workoutsystem.jpa.entities.UserEntity;
 import com.rogerfitness.workoutsystem.jpa.searchcriteria.UserSearchCriteria;
 import com.rogerfitness.workoutsystem.jpa.specifications.UserSpecification;
@@ -21,10 +22,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.mapping.PropertyReferenceException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.stream.Collectors;
 @Slf4j
@@ -35,6 +37,7 @@ public class UserService {
     private final UserConverter userConverter;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
 
     public List<UserResponseDto> getAllUsers() throws NonRetryableDBException, RetryableDBException {
         List<UserEntity> userEntityList = userRetryableWrapper.getAllUsers();
@@ -69,7 +72,7 @@ public class UserService {
         return userEntityPage.map(userConverter::convertFromEntity);
     }
 
-    public AuthenticationResponse createUser(RegisterRequest request) throws CreateUserDatabaseException {
+    public AuthenticationResponse createUser(CreateUserRequest request) throws CreateUserDatabaseException {
         UserEntity user = UserEntity
                 .builder()
                 .name(request.getName())
@@ -78,8 +81,8 @@ public class UserService {
                 .build();
         try {
             UserEntity userEntity = userRetryableWrapper.createUser(user);
-            SecurityUser securityUser = new SecurityUser(userEntity);
-            String token = jwtService.generateToken(securityUser);
+            UserSecurity userSecurity = new UserSecurity(userEntity);
+            String token = jwtService.generateToken(userSecurity);
             return AuthenticationResponse
                     .builder()
                     .accessToken(token)
@@ -92,6 +95,32 @@ public class UserService {
             throw new CreateUserDatabaseException(nonRetryableDBException.getMessage(), nonRetryableDBException, nonRetryableDBException.getErrorCode());
         } catch (Exception exception) {
             log.error("[UserService] createUser() general exception occurs", exception);
+            throw exception;
+        }
+    }
+    public AuthenticationResponse authenticateUser(AuthenticationRequest request) throws RetryableDBException, NonRetryableDBException {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getEmail(),
+                            request.getPassword()
+                    )
+            );
+            UserEntity userEntity = userRetryableWrapper.fetchUserByEmail(request.getEmail());
+            UserSecurity userSecurity = new UserSecurity(userEntity);
+            String token = jwtService.generateToken(userSecurity);
+            return AuthenticationResponse
+                    .builder()
+                    .accessToken(token)
+                    .build();
+        } catch (RetryableDBException retryableDBException) {
+            log.error("[UserService] authenticateUser() retryable DB exception occurs", retryableDBException);
+            throw retryableDBException;
+        } catch (NonRetryableDBException nonRetryableDBException) {
+            log.error("[UserService] authenticateUser() non-retryable DB exception occurs", nonRetryableDBException);
+            throw nonRetryableDBException;
+        } catch (Exception exception) {
+            log.error("[UserService] authenticateUser() general exception occurs", exception);
             throw exception;
         }
     }

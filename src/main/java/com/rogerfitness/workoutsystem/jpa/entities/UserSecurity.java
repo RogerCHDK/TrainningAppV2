@@ -6,11 +6,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-public class SecurityUser implements UserDetails {
+public class UserSecurity implements UserDetails {
 
     private final UserEntity userEntity;
 
-    public SecurityUser(UserEntity userEntity) {
+    public UserSecurity(UserEntity userEntity) {
         this.userEntity = userEntity;
     }
 

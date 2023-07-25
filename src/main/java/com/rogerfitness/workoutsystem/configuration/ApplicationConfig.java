@@ -1,6 +1,6 @@
 package com.rogerfitness.workoutsystem.configuration;
 
-import com.rogerfitness.workoutsystem.jpa.entities.SecurityUser;
+import com.rogerfitness.workoutsystem.jpa.entities.UserSecurity;
 import com.rogerfitness.workoutsystem.jpa.wrapper.UserRetryableWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +22,7 @@ public class ApplicationConfig {
     public UserDetailsService userDetailsService(){
         return username -> {
             try {
-                return new SecurityUser(userRetryableWrapper.fetchUserByEmail(username));
+                return new UserSecurity(userRetryableWrapper.fetchUserByEmail(username));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
