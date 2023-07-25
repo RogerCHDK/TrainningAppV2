@@ -1,7 +1,7 @@
 package com.rogerfitness.workoutsystem.factory;
 
 import com.rogerfitness.workoutsystem.exceptions.CardioMachinePurgeException;
-import com.rogerfitness.workoutsystem.exceptions.ExceptionHandler;
+import com.rogerfitness.workoutsystem.exceptions.handlers.ExceptionHandler;
 import com.rogerfitness.workoutsystem.exceptions.WorkoutSystemApplicationException;
 import com.rogerfitness.workoutsystem.exceptions.handlers.CardioMachineExceptionHandler;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package com.rogerfitness.workoutsystem.configuration;
+package com.rogerfitness.workoutsystem.configuration.kafka;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;

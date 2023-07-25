@@ -2,9 +2,7 @@ package com.rogerfitness.workoutsystem.exceptions.handlers;
 
 import com.rogerfitness.workoutsystem.constants.AlertConstants;
 import com.rogerfitness.workoutsystem.constants.WorkoutSystemApplicationConstants;
-import com.rogerfitness.workoutsystem.dto.SirenAlertMessage;
 import com.rogerfitness.workoutsystem.exceptions.CardioMachinePurgeException;
-import com.rogerfitness.workoutsystem.exceptions.ExceptionHandler;
 import com.rogerfitness.workoutsystem.exceptions.WorkoutSystemApplicationException;
 import com.rogerfitness.workoutsystem.messaging.publishers.SirenAlertPublisher;
 import com.rogerfitness.workoutsystem.utilities.AlertUtil;

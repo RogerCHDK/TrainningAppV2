@@ -1,4 +1,4 @@
-package com.rogerfitness.workoutsystem.configuration;
+package com.rogerfitness.workoutsystem.configuration.security;
 
 import com.rogerfitness.workoutsystem.service.JwtService;
 import org.springframework.lang.NonNull;
