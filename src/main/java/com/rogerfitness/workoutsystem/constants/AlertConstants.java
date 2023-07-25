@@ -11,5 +11,6 @@ public class AlertConstants {
     public static final String REMEDIATION_LINK = "Please follow the following link for more documentation https://workout-system-documentation.com";
     public static final String UNEXPECTED_FAILURE_REASON = "An unexpected exception occurred in scheduler: %s with message: %s";
     public static final String CARDIO_MACHINE_PURGE_SCHEDULER_BUSINESS_IMPACT = "Unable to purge expired records from cardio_machine table in WorkoutSystemApplication database";
+    public static final String CREATE_USER_BUSINESS_IMPACT = "User information cannot saved, this will prevent to new users to register in the system";
 
 }

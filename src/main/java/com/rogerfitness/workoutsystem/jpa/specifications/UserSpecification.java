@@ -47,15 +47,13 @@ public class UserSpecification {
         };
     }
 
-    public static Specification<UserEntity> filterByWeight(Double weight, EntityManager entityManager) {
+    public static Specification<UserEntity> filterByWeight(Double weight) {
         return (Root<UserEntity> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
             if (null == weight) {
                 return criteriaBuilder.conjunction();
             }
             log.info("Filtering by weight: {}", weight);
-            Fetch<Object, Object> fetch = root.fetch(WEIGHT_CONTROL, JoinType.INNER);
-            query.distinct(true);
-            return criteriaBuilder.greaterThan(root.join(WEIGHT_CONTROL).get("weight"), weight);
+            return criteriaBuilder.greaterThan(root.join(WEIGHT_CONTROL).get(WEIGHT), weight);
         };
     }
 }

@@ -27,36 +27,43 @@ dependencies {
 	implementation 'org.springframework.retry:spring-retry'
 	implementation 'org.springframework:spring-aspects'
 
-//	Prometheus and Grafana metrics
+	//	Prometheus and Grafana metrics
 	implementation 'org.springframework.boot:spring-boot-starter-actuator:3.0.4'
 	implementation 'io.micrometer:micrometer-registry-prometheus:1.10.5'
 
-//	Utility class
+	//	Utility class
 	implementation 'org.apache.commons:commons-lang3:3.4'
+	implementation 'org.springframework.boot:spring-boot-starter-validation:3.1.0'
 
-//	Swagger
-//	implementation 'io.springfox:springfox-swagger2:2.9.2'
-//	implementation 'io.springfox:springfox-swagger-ui:2.9.2'
+	//	Swagger
 	implementation 'io.springfox:springfox-boot-starter:3.0.0'
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
-//	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	runtimeOnly 'com.h2database:h2'
 
-//	Liquibase cli commands
+	//	Liquibase cli commands
 	liquibaseRuntime 'org.liquibase:liquibase-core:4.8.0'
 	liquibaseRuntime 'org.postgresql:postgresql'
 	liquibaseRuntime files("src/main/resources")
 
-//	kafka
+	//	kafka
 	implementation 'org.springframework.kafka:spring-kafka:2.9.0'
+
+	//	Java Security
+	implementation 'org.springframework.boot:spring-boot-starter-security:3.1.1'
+
+	//Json Web Token
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 }
+
 apply plugin: "org.liquibase.gradle"
 
-task getArtifactVersion {
+tasks.register('getArtifactVersion') {
 	doLast {
 		println version
 	}

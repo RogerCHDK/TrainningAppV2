@@ -1,8 +1,8 @@
 package com.rogerfitness.workoutsystem.jpa.wrapper;
 
 import com.rogerfitness.workoutsystem.constants.ErrorConstants;
-import com.rogerfitness.workoutsystem.exceptions.NonRetryableDBException;
-import com.rogerfitness.workoutsystem.exceptions.RetryableDBException;
+import com.rogerfitness.workoutsystem.exceptions.database.NonRetryableDBException;
+import com.rogerfitness.workoutsystem.exceptions.database.RetryableDBException;
 import com.rogerfitness.workoutsystem.jpa.entities.CardioMachineEntity;
 import com.rogerfitness.workoutsystem.jpa.repositories.CardioMachineRepository;
 import lombok.extern.slf4j.Slf4j;

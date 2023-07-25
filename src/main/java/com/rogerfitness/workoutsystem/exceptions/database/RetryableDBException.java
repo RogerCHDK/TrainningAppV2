@@ -1,9 +1,9 @@
-package com.rogerfitness.workoutsystem.exceptions;
+package com.rogerfitness.workoutsystem.exceptions.database;
 
 import lombok.Getter;
 
 @Getter
-public class RetryableDBException extends DBException{
+public class RetryableDBException extends DBException {
     private final String errorCode;
 
     public RetryableDBException() {

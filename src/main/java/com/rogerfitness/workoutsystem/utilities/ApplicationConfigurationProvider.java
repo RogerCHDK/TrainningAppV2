@@ -19,4 +19,10 @@ public class ApplicationConfigurationProvider {
     public String schedulerTimeZone;
     @Value("${scheduler.pool.max.size}")
     public Integer schedulerPoolMaxSize;
+    @Value("${application.security.jwt.secret-key}")
+    private String secretKey;
+    @Value("${application.security.jwt.expiration.in.minutes}")
+    private long jwtExpiration;
+    @Value("${application.security.jwt.refresh-token.expiration}")
+    private long refreshExpiration;
 }

@@ -10,7 +10,7 @@ import javax.persistence.*;
 
 import java.util.List;
 
-import static javax.persistence.GenerationType.SEQUENCE;
+import static javax.persistence.GenerationType.IDENTITY;
 
 
 @AllArgsConstructor
@@ -22,15 +22,7 @@ import static javax.persistence.GenerationType.SEQUENCE;
 public class UserEntity {
 
     @Id
-    @SequenceGenerator(
-            name = "user_sequence",
-            sequenceName = "user_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = SEQUENCE,
-            generator = "user_sequence"
-    )
+    @GeneratedValue(strategy = IDENTITY)
     @Column(
             name = "USER_ID_SEQ",
             updatable = false

@@ -1,6 +1,8 @@
 package com.rogerfitness.workoutsystem.controllers;
 
 import com.rogerfitness.workoutsystem.constants.PrometheusConstants;
+import com.rogerfitness.workoutsystem.dto.AuthenticationResponse;
+import com.rogerfitness.workoutsystem.dto.RegisterRequest;
 import com.rogerfitness.workoutsystem.dto.UserResponseDto;
 import com.rogerfitness.workoutsystem.jpa.searchcriteria.UserSearchCriteria;
 import com.rogerfitness.workoutsystem.responses.ApiErrorResponse;
@@ -14,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Api
@@ -73,6 +76,25 @@ public class UserController {
         } catch (Exception e) {
             requestCounter.incrementCount(PrometheusConstants.FETCH_USERS_ERROR);
             log.error("[UserController] fetchUsers() exception occurs", e);
+            throw e;
+        }
+    }
+
+    @PostMapping("/sing-in")
+    public ResponseEntity<com.rogerfitness.workoutsystem.responses.ApiResponse<AuthenticationResponse>> createUser(
+            @Valid @RequestBody RegisterRequest registerRequest
+    ) throws Exception {
+        log.info("POST endpoint createUser --START");
+        try {
+            return new ResponseEntity<>(
+                    new com.rogerfitness.workoutsystem.responses.ApiResponse<>(
+                            HttpStatus.CREATED.value(),
+                            userService.createUser(registerRequest)
+                    ),
+                    HttpStatus.CREATED
+            );
+        } catch (Exception e) {
+            log.error("[UserController] createUser() exception occurs", e);
             throw e;
         }
     }

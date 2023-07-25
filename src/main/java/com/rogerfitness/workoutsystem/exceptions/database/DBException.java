@@ -1,4 +1,4 @@
-package com.rogerfitness.workoutsystem.exceptions;
+package com.rogerfitness.workoutsystem.exceptions.database;
 
 public class DBException  extends Exception{
     public DBException() {
