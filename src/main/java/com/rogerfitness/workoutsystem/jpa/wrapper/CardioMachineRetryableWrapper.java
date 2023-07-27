@@ -31,8 +31,8 @@ public class CardioMachineRetryableWrapper {
     @Retryable(
             include = RetryableDBException.class,
             exclude = {NonRetryableDBException.class},
-            maxAttemptsExpression = "3",
-            backoff = @Backoff(delay = 1000)
+            maxAttemptsExpression = "${db.error.retry.maxRetry}",
+            backoff = @Backoff(delayExpression = "${db.error.retryDelay}")
     )
     public Page<CardioMachineEntity> fetchCardioMachineByIsExpired(boolean isExpired, Pageable pageable) throws RetryableDBException, NonRetryableDBException {
         try {
@@ -49,8 +49,8 @@ public class CardioMachineRetryableWrapper {
     @Retryable(
             include = RetryableDBException.class,
             exclude = {NonRetryableDBException.class},
-            maxAttemptsExpression = "3",
-            backoff = @Backoff(delay = 1000)
+            maxAttemptsExpression = "${db.error.retry.maxRetry}",
+            backoff = @Backoff(delayExpression = "${db.error.retryDelay}")
     )
     public void purgeExpiredCardioMachine(List<Integer> cardioMachineIdsList) throws RetryableDBException, NonRetryableDBException {
         try {

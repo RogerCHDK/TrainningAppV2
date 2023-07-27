@@ -30,8 +30,8 @@ public class UserRetryableWrapper {
     @Retryable(
             include = RetryableDBException.class,
             exclude = {NonRetryableDBException.class},
-            maxAttemptsExpression = "3",
-            backoff = @Backoff(delay = 1000)
+            maxAttemptsExpression = "${db.error.retry.maxRetry}",
+            backoff = @Backoff(delayExpression = "${db.error.retryDelay}")
     )
     public List<UserEntity> getAllUsers() throws RetryableDBException, NonRetryableDBException{
         List<UserEntity> userEntityList = new ArrayList<>();
@@ -52,8 +52,8 @@ public class UserRetryableWrapper {
     @Retryable(
             include = RetryableDBException.class,
             exclude = {NonRetryableDBException.class},
-            maxAttemptsExpression = "3",
-            backoff = @Backoff(delay = 1000)
+            maxAttemptsExpression = "${db.error.retry.maxRetry}",
+            backoff = @Backoff(delayExpression = "${db.error.retryDelay}")
     )
     public Page<UserEntity> fetchUsers(Specification<UserEntity> specification,Pageable pageable) throws RetryableDBException, NonRetryableDBException{
         try {
@@ -72,8 +72,8 @@ public class UserRetryableWrapper {
     @Retryable(
             include = RetryableDBException.class,
             exclude = {NonRetryableDBException.class},
-            maxAttemptsExpression = "3",
-            backoff = @Backoff(delay = 1000)
+            maxAttemptsExpression = "${db.error.retry.maxRetry}",
+            backoff = @Backoff(delayExpression = "${db.error.retryDelay}")
     )
     public UserEntity fetchUserByEmail(String email) throws RetryableDBException, NonRetryableDBException{
         try {
@@ -98,8 +98,8 @@ public class UserRetryableWrapper {
     @Retryable(
             include = RetryableDBException.class,
             exclude = {NonRetryableDBException.class},
-            maxAttemptsExpression = "3",
-            backoff = @Backoff(delay = 1000)
+            maxAttemptsExpression = "${db.error.retry.maxRetry}",
+            backoff = @Backoff(delayExpression = "${db.error.retryDelay}")
     )
     public UserEntity createUser(UserEntity user) throws RetryableDBException, NonRetryableDBException{
         try {

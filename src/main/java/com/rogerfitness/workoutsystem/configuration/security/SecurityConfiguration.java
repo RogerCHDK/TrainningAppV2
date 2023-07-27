@@ -33,7 +33,8 @@ public class SecurityConfiguration {
                                 "/actuator/**",
                                 "/h2-console/**",
                                 "/api/v1/user/sing-in",
-                                "/api/v1/user/login"
+                                "/api/v1/user/login",
+                                "/api/v1/dev/**"
                         )
                         .permitAll()
                         .anyRequest()
